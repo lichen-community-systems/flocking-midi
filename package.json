@@ -27,8 +27,13 @@
     ],
     "readmeFilename": "README.md",
     "devDependencies": {
-        "testem": "3.2.0",
-        "flocking": "3.0.0-dev.20200610T183220Z.602db9b"
+        "eslint": "5.7.0",
+        "eslint-config-fluid": "1.3.0",
+        "flocking": "3.0.0-dev.20200610T183220Z.602db9b",
+        "fluid-grunt-eslint": "18.1.2",
+        "gpii-grunt-lint-all": "1.0.5",
+        "grunt": "1.0.3",
+        "testem": "3.2.0"
     },
     "dependencies": {
         "codemirror-infusion": "2.2.2",
