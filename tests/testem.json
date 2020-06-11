@@ -1,7 +1,5 @@
 {
-    "test_page": "tests/unit/all-tests.html",
-    "timeout": 300,
-    "skip": "PhantomJS,IE,Headless Chrome",
+    "test_page": "tests/all-tests.html",
     "browser_args": {
         "Chrome": [
             "--autoplay-policy=no-user-gesture-required"
