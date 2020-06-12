@@ -1,0 +1,41 @@
+{
+    "name": "flocking-midi",
+    "version": "1.0.0",
+    "description": "MIDI tools and components for Flocking",
+    "contributors": [
+        {
+            "name": "Colin Clark",
+            "url": "https://colinclark.org"
+        },
+        {
+            "name": "Tony Atkins"
+        }
+    ],
+    "homepage": "https://flockingjs.org/",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/continuing-creativity/flocking-midi.git"
+    },
+    "bugs": {
+        "url": "https://github.com/continuing-creativity/flocking-midi/issues"
+    },
+    "license": "MIT",
+    "keywords": [
+        "Flocking",
+        "music",
+        "midi"
+    ],
+    "readmeFilename": "README.md",
+    "devDependencies": {
+        "testem": "3.2.0"
+    },
+    "dependencies": {
+        "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718",
+        "flocking": "3.0.0-dev.20200610T183220Z.602db9b",
+        "codemirror-infusion": "2.2.2",
+        "normalize.css": "8.0.1"
+    },
+    "scripts": {
+        "test": "node_modules/.bin/testem ci --file tests/unit/testem.json"
+    }
+}
