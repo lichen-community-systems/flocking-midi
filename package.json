@@ -36,6 +36,8 @@
         "testem": "3.2.0"
     },
     "dependencies": {
+        "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718",
+        "flocking": "3.0.0-dev.20200610T183220Z.602db9b",
         "codemirror-infusion": "2.2.2",
         "normalize.css": "8.0.1"
     },
