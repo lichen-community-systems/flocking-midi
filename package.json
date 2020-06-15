@@ -29,7 +29,6 @@
     "devDependencies": {
         "eslint": "7.2.0",
         "eslint-config-fluid": "1.4.0",
-        "flocking": "3.0.0-dev.20200611T163647Z.57f01cd",
         "fluid-grunt-eslint": "18.1.2",
         "gpii-grunt-lint-all": "1.0.7",
         "grunt": "1.1.0",
@@ -43,6 +42,6 @@
     },
     "scripts": {
         "prepare": "node_modules/.bin/grunt",
-        "test": "node_modules/.bin/testem ci --file tests/unit/testem.json"
+        "test": "node_modules/.bin/testem ci --file tests/testem.json"
     }
 }
