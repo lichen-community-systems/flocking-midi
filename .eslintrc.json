@@ -1,0 +1,19 @@
+{
+    "extends": "eslint-config-fluid",
+    "env": {
+        "browser": true
+    },
+    "rules": {
+        "strict": [
+            "error",
+            "global"
+        ],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ]
+    }
+}
