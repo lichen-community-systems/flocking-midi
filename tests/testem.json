@@ -1,7 +1,10 @@
 {
     "test_page": "tests/all-tests.html",
-    "skip": "IE",
+    "skip": "Headless Chrome,IE,PhantomJS",
     "browser_args": {
+        "Firefox": [
+            "--headless"
+        ],
         "Chrome": [
             "--autoplay-policy=no-user-gesture-required"
         ],
