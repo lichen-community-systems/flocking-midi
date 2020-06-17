@@ -1,5 +1,6 @@
 {
     "test_page": "tests/all-tests.html",
+    "skip": "IE",
     "browser_args": {
         "Chrome": [
             "--autoplay-policy=no-user-gesture-required"
