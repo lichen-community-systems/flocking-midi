@@ -15,12 +15,15 @@ fluid.defaults("flock.ui.midiConnector", {
 
     portType: "input",
 
+    preferredDevice: undefined,
+
     components: {
         midiPortSelector: {
             type: "flock.ui.midiPortSelector",
             container: "{that}.container",
             options: {
                 portType: "{midiConnector}.options.portType",
+                preferredDevice: "{midiConnector}.options.preferredDevice",
                 events: {
                     onPortSelected: "{midiConnector}.events.onPortSelected"
                 }
@@ -28,7 +31,7 @@ fluid.defaults("flock.ui.midiConnector", {
         },
 
         connection: {
-            createOnEvent: "onPortSelected",
+            createOnEvent: "onValidPortSelected",
             type: "flock.midi.connection",
             options: {
                 openImmediately: true,
@@ -68,7 +71,15 @@ fluid.defaults("flock.ui.midiConnector", {
 
     events: {
         onPortSelected: null,
+        onValidPortSelected: null,
         afterConnectionOpen: null
+    },
+
+    listeners: {
+        "onPortSelected.validatePortSelection": {
+            funcName: "flock.ui.midiConnector.validatePortSelection",
+            args: ["{that}"]
+        }
     }
 });
 
@@ -79,4 +90,11 @@ flock.ui.midiConnector.generatePortSpecification = function (portType, portIDs) 
     };
 
     return spec;
+};
+
+flock.ui.midiConnector.validatePortSelection = function (that) {
+    var selectedId = fluid.get(that, "midiPortSelector.selectBox.model.selection");
+    if (selectedId) {
+        that.events.onValidPortSelected.fire();
+    }
 };

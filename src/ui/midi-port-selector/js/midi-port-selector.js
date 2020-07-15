@@ -18,6 +18,15 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
     portType: "input",
 
+    preferredDevice: undefined,
+
+    implicitPorts: [
+        {
+            id: "flock-no-port-selected",
+            name: "None"
+        }
+    ],
+
     model: {
         ports: []
     },
@@ -25,9 +34,11 @@ fluid.defaults("flock.ui.midiPortSelector", {
     components: {
         selectBox: {
             createOnEvent: "onReady",
-            type: "flock.ui.selectBox",
+            type: "flock.midi.deviceSelectBox",
             container: "{that}.dom.selectBox",
             options: {
+                preferredOption: "{midiPortSelector}.options.preferredDevice",
+
                 model: {
                     options: "{midiPortSelector}.model.ports"
                 },
@@ -107,16 +118,11 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
         "onRefresh.refreshSystemPorts": "{midiSystem}.refreshPorts()",
 
-        "onPortsAvailable.deleteOldPorts": {
-            changePath: "ports",
-            type: "DELETE"
-        },
-
         "onPortsAvailable.updatePortsModel": {
-            priority: "after:deleteOldPorts",
             funcName: "flock.ui.midiPortSelector.updatePortsModel",
-            args: ["{that}.options.portType", "{arguments}.0", "{that}"]
+            args: ["{that}", "{arguments}.0"]
         }
+
     },
 
     markup: {
@@ -141,15 +147,15 @@ fluid.defaults("flock.ui.midiPortSelector", {
     }
 });
 
-flock.ui.midiPortSelector.updatePortsModel = function (portType, ports, that) {
-    if (portType === "input") {
-        portType = "inputs";
-    } else if (portType === "output") {
-        portType = "outputs";
-    }
 
-    var portsForType = ports[portType];
-    that.applier.change("ports", portsForType);
+flock.ui.midiPortSelector.updatePortsModel = function (that, ports) {
+    var portType = that.options.portType + "s";
+    var portsForType = fluid.copy(that.options.implicitPorts).concat(ports[portType]);
+
+    var transaction = that.applier.initiate();
+    transaction.fireChangeRequest({ path: "ports", type: "DELETE" });
+    transaction.fireChangeRequest({ path: "ports", value: portsForType });
+    transaction.commit();
 };
 
 // TODO: Move to the selectBox component.

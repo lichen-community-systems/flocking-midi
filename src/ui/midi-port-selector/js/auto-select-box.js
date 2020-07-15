@@ -9,27 +9,32 @@
 
 var flock = fluid.registerNamespace("flock");
 
-fluid.defaults("flock.auto.ui.selectBox", {
+fluid.defaults("flock.midi.deviceSelectBox", {
     gradeNames: ["flock.ui.selectBox"],
+
+    preferredOption: undefined,
+
     listeners: {
         "onRender.selectInitial": {
             priority: "after:renderOptions",
-            funcName: "flock.auto.ui.selectBox.selectInitial",
+            funcName: "flock.midi.deviceSelectBox.selectInitial",
             args: "{that}"
         }
     }
 });
 
-flock.auto.ui.selectBox.selectInitial = function (that) {
-    if (that.model.options && that.model.options.length) {
-        if (!that.model.selection && that.options.preferredDevice) {
+flock.midi.deviceSelectBox.selectInitial = function (that) {
+    var optionsLength = fluid.get(that, "model.options.length");
+    if (optionsLength) {
+        if (!that.model.selection && that.options.preferredOption) {
             var matchingPort = fluid.find(that.model.options, function (portDef) {
                 var portName = fluid.get(portDef, "name");
-                return portName === that.options.preferredDevice ? portDef : undefined;
+                return portName === that.options.preferredOption ? portDef : undefined;
             });
             if (matchingPort) {
-                that.applier.change("selection", matchingPort);
                 flock.ui.selectBox.selectElement(that.container, matchingPort.id);
+                that.applier.change("selection", matchingPort.id);
+                that.events.onSelect.fire();
             }
         }
         else if (that.model.selection) {
