@@ -137,7 +137,7 @@ fluid.defaults("flock.demo.rawMidiSender", {
 
     components: {
         connector: {
-            type: "flock.ui.midiConnector",
+            type: "flock.midi.connectorView",
             container: "{that}.dom.midiPortSelector",
             options: {
                 portType: "output",

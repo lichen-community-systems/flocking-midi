@@ -9,27 +9,29 @@
 
 var flock = fluid.registerNamespace("flock");
 
-fluid.defaults("flock.midi.deviceSelectBox", {
+// TODO: Generalize this and merge into Flocking's
+// flock.ui.selectBox component.
+fluid.defaults("flock.midi.portSelectBox", {
     gradeNames: ["flock.ui.selectBox"],
 
-    preferredOption: undefined,
+    preferredPort: undefined,
 
     listeners: {
         "onRender.selectInitial": {
             priority: "after:renderOptions",
-            funcName: "flock.midi.deviceSelectBox.selectInitial",
+            funcName: "flock.midi.portSelectBox.selectInitial",
             args: "{that}"
         }
     }
 });
 
-flock.midi.deviceSelectBox.selectInitial = function (that) {
+flock.midi.portSelectBox.selectInitial = function (that) {
     var optionsLength = fluid.get(that, "model.options.length");
     if (optionsLength) {
-        if (!that.model.selection && that.options.preferredOption) {
+        if (!that.model.selection && that.options.preferredPort) {
             var matchingPort = fluid.find(that.model.options, function (portDef) {
                 var portName = fluid.get(portDef, "name");
-                return portName === that.options.preferredOption ? portDef : undefined;
+                return portName === that.options.preferredPort ? portDef : undefined;
             });
             if (matchingPort) {
                 flock.ui.selectBox.selectElement(that.container, matchingPort.id);

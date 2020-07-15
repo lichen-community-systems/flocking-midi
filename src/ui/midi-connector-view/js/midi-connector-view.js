@@ -10,22 +10,22 @@
 
 var flock = fluid.registerNamespace("flock");
 
-fluid.defaults("flock.ui.midiConnector", {
+fluid.defaults("flock.midi.connectorView", {
     gradeNames: ["flock.midi.receiver", "fluid.viewComponent"],
 
     portType: "input",
 
-    preferredDevice: undefined,
+    preferredPort: undefined,
 
     components: {
         midiPortSelector: {
-            type: "flock.ui.midiPortSelector",
+            type: "flock.midi.portSelectorView",
             container: "{that}.container",
             options: {
-                portType: "{midiConnector}.options.portType",
-                preferredDevice: "{midiConnector}.options.preferredDevice",
+                portType: "{connectorView}.options.portType",
+                preferredPort: "{connectorView}.options.preferredPort",
                 events: {
-                    onPortSelected: "{midiConnector}.events.onPortSelected"
+                    onPortSelected: "{connectorView}.events.onPortSelected"
                 }
             }
         },
@@ -37,9 +37,9 @@ fluid.defaults("flock.ui.midiConnector", {
                 openImmediately: true,
                 ports: {
                     expander: {
-                        funcName: "flock.ui.midiConnector.generatePortSpecification",
+                        funcName: "flock.midi.connectorView.generatePortSpecification",
                         args: [
-                            "{midiConnector}.options.portType",
+                            "{connectorView}.options.portType",
                             "{midiPortSelector}.selectBox.model.selection"
                         ]
                     }
@@ -49,20 +49,20 @@ fluid.defaults("flock.ui.midiConnector", {
                 // Is there a better way to distribute listeners from this
                 // parent "facade" object to its connection subcomponent?
                 events: {
-                    raw: "{midiConnector}.events.raw",
-                    message: "{midiConnector}.events.message",
-                    note: "{midiConnector}.events.note",
-                    noteOn: "{midiConnector}.events.noteOn",
-                    noteOff: "{midiConnector}.events.noteOff",
-                    control: "{midiConnector}.events.control",
-                    program: "{midiConnector}.events.program",
-                    aftertouch: "{midiConnector}.events.aftertouch",
-                    pitchbend: "{midiConnector}.events.pitchbend"
+                    raw: "{connectorView}.events.raw",
+                    message: "{connectorView}.events.message",
+                    note: "{connectorView}.events.note",
+                    noteOn: "{connectorView}.events.noteOn",
+                    noteOff: "{connectorView}.events.noteOff",
+                    control: "{connectorView}.events.control",
+                    program: "{connectorView}.events.program",
+                    aftertouch: "{connectorView}.events.aftertouch",
+                    pitchbend: "{connectorView}.events.pitchbend"
                 },
 
                 listeners: {
                     "onCreate.fireAfterConnectionOpen": {
-                        func: "{midiConnector}.events.afterConnectionOpen.fire"
+                        func: "{connectorView}.events.afterConnectionOpen.fire"
                     }
                 }
             }
@@ -77,13 +77,13 @@ fluid.defaults("flock.ui.midiConnector", {
 
     listeners: {
         "onPortSelected.validatePortSelection": {
-            funcName: "flock.ui.midiConnector.validatePortSelection",
+            funcName: "flock.midi.connectorView.validatePortSelection",
             args: ["{that}"]
         }
     }
 });
 
-flock.ui.midiConnector.generatePortSpecification = function (portType, portIDs) {
+flock.midi.connectorView.generatePortSpecification = function (portType, portIDs) {
     var spec = {};
     spec[portType] = {
         id: portIDs
@@ -92,7 +92,7 @@ flock.ui.midiConnector.generatePortSpecification = function (portType, portIDs) 
     return spec;
 };
 
-flock.ui.midiConnector.validatePortSelection = function (that) {
+flock.midi.connectorView.validatePortSelection = function (that) {
     var selectedId = fluid.get(that, "midiPortSelector.selectBox.model.selection");
     if (selectedId) {
         that.events.onValidPortSelected.fire();

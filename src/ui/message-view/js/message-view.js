@@ -15,7 +15,7 @@ var flock = fluid.registerNamespace("flock");
 /**
  * Logs incoming MIDI messages from all <code>flock.midi.connection</code>s, globally.
  */
-fluid.defaults("flock.ui.midiMessageView", {
+fluid.defaults("flock.midi.messageMonitorView", {
     gradeNames: "fluid.codeMirror",
 
     codeMirrorOptions: {
@@ -34,7 +34,7 @@ fluid.defaults("flock.ui.midiMessageView", {
         record: {
             listeners: {
                 "message.logMIDI": {
-                    func: "flock.ui.midiMessageView.logMIDI",
+                    func: "flock.midi.messageMonitorView.logMIDI",
                     args: [
                         "{midiMessageView}",
                         "{midiMessageView}.options.strings.midiLogMessage",
@@ -51,7 +51,7 @@ fluid.defaults("flock.ui.midiMessageView", {
     }
 });
 
-flock.ui.midiMessageView.typedArrayReplacer = function (key, value) {
+flock.midi.messageMonitorView.typedArrayReplacer = function (key, value) {
     if (!ArrayBuffer.isView(value) || value instanceof DataView) {
         return value;
     }
@@ -70,7 +70,7 @@ flock.ui.midiMessageView.typedArrayReplacer = function (key, value) {
  * @param {Number} num the number to pad
  * @return {String} the padded number, as a string
  */
-flock.ui.midiMessageView.zeroPad = function (num) {
+flock.midi.messageMonitorView.zeroPad = function (num) {
     if (num >= 10000) {
         return num;
     }
@@ -78,23 +78,23 @@ flock.ui.midiMessageView.zeroPad = function (num) {
     return ("0000" + num).slice(-4);
 };
 
-flock.ui.midiMessageView.renderMIDILog = function (msgTemplate, msg, port) {
+flock.midi.messageMonitorView.renderMIDILog = function (msgTemplate, msg, port) {
     var nowDate = new Date();
 
     return fluid.stringTemplate(msgTemplate, {
         hours: nowDate.getHours(),
         minutes: nowDate.getMinutes(),
         seconds: nowDate.getSeconds(),
-        millis: flock.ui.midiMessageView.zeroPad(nowDate.getMilliseconds()),
+        millis: flock.midi.messageMonitorView.zeroPad(nowDate.getMilliseconds()),
         manufacturer: port.manufacturer,
         name: port.name,
-        msg: JSON.stringify(msg, flock.ui.midiMessageView.typedArrayReplacer)
+        msg: JSON.stringify(msg, flock.midi.messageMonitorView.typedArrayReplacer)
     });
 };
 
-flock.ui.midiMessageView.logMIDI = function (that, msgTemplate, msg, rawEvent) {
+flock.midi.messageMonitorView.logMIDI = function (that, msgTemplate, msg, rawEvent) {
     var port = rawEvent.target,
-        messageText = flock.ui.midiMessageView.renderMIDILog(msgTemplate, msg, port),
+        messageText = flock.midi.messageMonitorView.renderMIDILog(msgTemplate, msg, port),
         lastLinePos = CodeMirror.Pos(that.editor.lastLine());
 
     that.editor.replaceRange(messageText + "\n", lastLinePos);
