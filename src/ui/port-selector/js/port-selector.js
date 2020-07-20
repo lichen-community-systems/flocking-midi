@@ -37,7 +37,7 @@ fluid.defaults("flock.midi.portSelectorView", {
             type: "flock.midi.portSelectBox",
             container: "{that}.dom.selectBox",
             options: {
-                preferredOption: "{midiPortSelector}.options.preferredPort",
+                preferredPort: "{midiPortSelector}.options.preferredPort",
 
                 model: {
                     options: "{midiPortSelector}.model.ports"
