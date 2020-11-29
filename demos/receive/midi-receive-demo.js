@@ -17,12 +17,12 @@ fluid.defaults("flock.midiDemo", {
         enviro: "{flock.enviro}",
 
         midiMessageView: {
-            type: "flock.ui.midiMessageView",
+            type: "flock.midi.messageMonitorView",
             container: "{that}.dom.messageRegion"
         },
 
         midiConnector: {
-            type: "flock.ui.midiConnector",
+            type: "flock.midi.connectorView",
             container: "{that}.dom.midiPortSelector",
             options: {
                 components: {

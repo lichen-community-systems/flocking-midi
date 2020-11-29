@@ -49,7 +49,7 @@ fluid.defaults("flock.midi.connection", {
         open: {
             funcName: "flock.midi.connection.bind",
             args: [
-                "{that}.system.ports",
+                "{that}.system.model.ports",
                 "{that}.options.ports",
                 "{that}.events.onReady.fire",
                 "{that}.events.raw.fire",
@@ -60,7 +60,7 @@ fluid.defaults("flock.midi.connection", {
         close: {
             funcName: "flock.midi.connection.close",
             args: [
-                "{that}.system.ports",
+                "{that}.system.model.ports",
                 "{that}.events.raw.fire"
             ]
         }

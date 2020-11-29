@@ -15,15 +15,17 @@ var flock = fluid.registerNamespace("flock");
  * including references to all the available MIDI ports
  * and the MIDIAccess object.
  */
-// TODO: This should be a model component!
 fluid.defaults("flock.midi.system", {
-    gradeNames: ["fluid.component"],
+    gradeNames: ["fluid.modelComponent"],
 
     sysex: false,
 
     members: {
-        access: undefined,
-        ports: undefined
+        access: undefined
+    },
+
+    model: {
+        ports: {}
     },
 
     invokers: {
@@ -38,7 +40,10 @@ fluid.defaults("flock.midi.system", {
 
         refreshPorts: {
             funcName: "flock.midi.system.refreshPorts",
-            args: ["{that}", "{that}.access", "{that}.events.onPortsAvailable.fire"]
+            args: [
+                "{that}.access",
+                "{that}.events.onPortsAvailable.fire"
+            ]
         }
     },
 
@@ -64,6 +69,12 @@ fluid.defaults("flock.midi.system", {
             func: "{that}.refreshPorts"
         },
 
+        "onAccessGranted.bindAutoRefresh": {
+            priority: "after:refreshPorts",
+            funcName: "flock.midi.system.listenForPortChanges",
+            args:     ["{that}", "{arguments}.0"] // accessObject
+        },
+
         "onAccessGranted.fireOnReady": {
             priority: "after:refreshPorts",
             func: "{that}.events.onReady.fire",
@@ -73,6 +84,11 @@ fluid.defaults("flock.midi.system", {
         "onAccessError.logError": {
             funcName: "fluid.log",
             args: [fluid.logLevel.WARN, "MIDI Access Error: ", "{arguments}.0"]
+        },
+
+        "onPortsAvailable.modelizePorts": {
+            funcName: "flock.midi.system.modelizePorts",
+            args: ["{that}.applier", "{arguments}.0"]
         }
 
         // TODO: Provide an onDestroy listener
@@ -84,7 +100,22 @@ flock.midi.system.setAccess = function (that, access) {
     that.access = access;
 };
 
-flock.midi.system.refreshPorts = function (that, access, onPortsAvailable) {
-    that.ports = flock.midi.getPorts(access);
-    onPortsAvailable(that.ports);
+flock.midi.system.refreshPorts = function (access, onPortsAvailable) {
+    var ports = flock.midi.getPorts(access);
+    onPortsAvailable(ports);
+};
+
+flock.midi.system.modelizePorts = function (applier, ports) {
+    // Delete the entire existing collection of ports
+    // and replace with the current member variable.
+    var transaction = applier.initiate();
+    transaction.fireChangeRequest({ path: "ports", type: "DELETE" });
+    transaction.fireChangeRequest({ path: "ports", value: ports });
+    transaction.commit();
+};
+
+flock.midi.system.listenForPortChanges = function (that, access) {
+    if (access) {
+        access.onstatechange = that.refreshPorts;
+    }
 };

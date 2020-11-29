@@ -13,10 +13,19 @@ var flock = fluid.registerNamespace("flock");
 // TODO: add support for rendering errors
 // TODO: add user-friendly rendering in the case when no midi ports are available
 // TODO: move selectBox container rendering into the selectBox component
-fluid.defaults("flock.ui.midiPortSelector", {
+fluid.defaults("flock.midi.portSelectorView", {
     gradeNames: "fluid.viewComponent",
 
     portType: "input",
+
+    preferredPort: undefined,
+
+    implicitPorts: [
+        {
+            id: "flock-no-port-selected",
+            name: "None"
+        }
+    ],
 
     model: {
         ports: []
@@ -25,9 +34,11 @@ fluid.defaults("flock.ui.midiPortSelector", {
     components: {
         selectBox: {
             createOnEvent: "onReady",
-            type: "flock.ui.selectBox",
+            type: "flock.midi.portSelectBox",
             container: "{that}.dom.selectBox",
             options: {
+                preferredPort: "{midiPortSelector}.options.preferredPort",
+
                 model: {
                     options: "{midiPortSelector}.model.ports"
                 },
@@ -71,7 +82,7 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
         // TODO: Move the selectBox portions of this to the selectBox component.
         "onRender.renderLabel": {
-            funcName: "flock.ui.midiPortSelector.render",
+            funcName: "flock.midi.portSelectorView.render",
             args: [
                 "{that}.container",
                 "{that}.options.markup.label",
@@ -81,7 +92,7 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
         "onRender.renderSelectBox": {
             priority: "after:renderLabel",
-            funcName: "flock.ui.midiPortSelector.render",
+            funcName: "flock.midi.portSelectorView.render",
             args: [
                 "{that}.container",
                 "{that}.options.markup.selectBox",
@@ -91,7 +102,7 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
         "onRender.renderRefreshButton": {
             priority: "after:renderSelectBox",
-            funcName: "flock.ui.midiPortSelector.renderRefreshButton",
+            funcName: "flock.midi.portSelectorView.renderRefreshButton",
             args: [
                 "{that}.container",
                 "{that}.options.markup.refreshButton",
@@ -107,16 +118,11 @@ fluid.defaults("flock.ui.midiPortSelector", {
 
         "onRefresh.refreshSystemPorts": "{midiSystem}.refreshPorts()",
 
-        "onPortsAvailable.deleteOldPorts": {
-            changePath: "ports",
-            type: "DELETE"
-        },
-
         "onPortsAvailable.updatePortsModel": {
-            priority: "after:deleteOldPorts",
-            funcName: "flock.ui.midiPortSelector.updatePortsModel",
-            args: ["{that}.options.portType", "{arguments}.0", "{that}"]
+            funcName: "flock.midi.portSelectorView.updatePortsModel",
+            args: ["{that}", "{arguments}.0"]
         }
+
     },
 
     markup: {
@@ -141,19 +147,19 @@ fluid.defaults("flock.ui.midiPortSelector", {
     }
 });
 
-flock.ui.midiPortSelector.updatePortsModel = function (portType, ports, that) {
-    if (portType === "input") {
-        portType = "inputs";
-    } else if (portType === "output") {
-        portType = "outputs";
-    }
 
-    var portsForType = ports[portType];
-    that.applier.change("ports", portsForType);
+flock.midi.portSelectorView.updatePortsModel = function (that, ports) {
+    var portType = that.options.portType + "s";
+    var portsForType = fluid.copy(that.options.implicitPorts).concat(ports[portType]);
+
+    var transaction = that.applier.initiate();
+    transaction.fireChangeRequest({ path: "ports", type: "DELETE" });
+    transaction.fireChangeRequest({ path: "ports", value: portsForType });
+    transaction.commit();
 };
 
 // TODO: Move to the selectBox component.
-flock.ui.midiPortSelector.render = function (container, markup, strings) {
+flock.midi.portSelectorView.render = function (container, markup, strings) {
     var rendered = fluid.stringTemplate(markup, strings),
         el = jQuery(rendered);
 
@@ -162,8 +168,8 @@ flock.ui.midiPortSelector.render = function (container, markup, strings) {
     return el;
 };
 
-flock.ui.midiPortSelector.renderRefreshButton = function (container, markup, strings, onRefresh) {
-    var button = flock.ui.midiPortSelector.render(container, markup, strings);
+flock.midi.portSelectorView.renderRefreshButton = function (container, markup, strings, onRefresh) {
+    var button = flock.midi.portSelectorView.render(container, markup, strings);
     button.click(function () {
         onRefresh();
         return false;
