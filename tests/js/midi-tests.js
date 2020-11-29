@@ -6,7 +6,7 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
- /*global jqUnit, Uint8Array*/
+/*global jqUnit, Uint8Array*/
 
 "use strict";
 

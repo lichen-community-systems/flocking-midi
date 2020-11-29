@@ -6,7 +6,7 @@
  * Dual licensed under the MIT and GPL Version 2 licenses.
  */
 
- /*global ArrayBuffer, DataView, CodeMirror*/
+/*global ArrayBuffer, DataView, CodeMirror*/
 
 "use strict";
 
@@ -67,7 +67,7 @@ flock.midi.messageMonitorView.typedArrayReplacer = function (key, value) {
 /**
  * Pads a number to four digits with zeros.
  *
- * @param {Number} num the number to pad
+ * @param {Number} num - the number to pad
  * @return {String} the padded number, as a string
  */
 flock.midi.messageMonitorView.zeroPad = function (num) {

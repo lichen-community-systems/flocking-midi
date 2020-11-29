@@ -6,7 +6,7 @@
  * Dual licensed under the MIT and GPL Version 2 licenses.
  */
 
- /*global Uint8Array*/
+/*global Uint8Array*/
 
 "use strict";
 
@@ -327,7 +327,7 @@ flock.midi.createSystemRealtimeMessageReaders(flock.midi.systemRealtimeMessages)
  *
  * Take a MIDI messageSpec object and convert it to an array of raw bytes suitable for sending to a MIDI device.
  *
- * @param {Object} midiMessage a MIDI messageSpec object
+ * @param {Object} midiMessage - a MIDI messageSpec object
  * @return {Uint8Array} - an array containing the encoded MIDI message's bytes
  *
  */
@@ -519,9 +519,9 @@ flock.midi.findPorts.portFinder = function (portSpec) {
 
     var matcher = portSpec.id ? flock.midi.findPorts.idMatcher(portSpec.id) :
         portSpec.manufacturer && portSpec.name ?
-        flock.midi.findPorts.bothMatcher(portSpec.manufacturer, portSpec.name) :
-        portSpec.manufacturer ? flock.midi.findPorts.manufacturerMatcher(portSpec.manufacturer) :
-        flock.midi.findPorts.nameMatcher(portSpec.name);
+            flock.midi.findPorts.bothMatcher(portSpec.manufacturer, portSpec.name) :
+            portSpec.manufacturer ? flock.midi.findPorts.manufacturerMatcher(portSpec.manufacturer) :
+                flock.midi.findPorts.nameMatcher(portSpec.name);
 
     return function (ports) {
         return ports.filter(matcher);
