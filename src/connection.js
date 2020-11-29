@@ -110,8 +110,8 @@ fluid.defaults("flock.midi.connection", {
  *
  * Sends a MIDI message.
  *
- * @param {Object} that the flock.midi.connection component itself
- * @param {Object} midiMessage a MIDI messageSpec
+ * @param {Object} that - the flock.midi.connection component itself
+ * @param {Object} midiMessage - a MIDI messageSpec
  */
 flock.midi.connection.send = function (that, midiMessage) {
     var midiBytes = flock.midi.write(midiMessage);

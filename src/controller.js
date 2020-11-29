@@ -174,8 +174,7 @@ flock.midi.controller.setMappedValue = function (value, map, synthContext) {
     // This is typically used when manually closing gates with noteOff events
     // fired by controllers that specify key release speed as velocity.
     value = map.value !== undefined ? map.value :
-        map.transform ? flock.midi.controller.transformValue(value, map) :
-        value;
+        map.transform ? flock.midi.controller.transformValue(value, map) : value;
 
     var synth = synthContext[map.synth] || synthContext;
 
