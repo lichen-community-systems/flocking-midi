@@ -1,6 +1,6 @@
 {
     "name": "flocking-midi",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "MIDI tools and components for Flocking",
     "contributors": [
         {
