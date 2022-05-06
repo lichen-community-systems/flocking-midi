@@ -27,21 +27,18 @@
     ],
     "readmeFilename": "README.md",
     "devDependencies": {
-        "eslint": "7.14.0",
-        "eslint-config-fluid": "2.0.0",
-        "fluid-grunt-eslint": "18.1.2",
-        "fluid-grunt-lint-all": "2.0.0",
-        "grunt": "1.3.0",
-        "testem": "3.2.0"
+        "eslint": "8.14.0",
+        "fluid-lint-all": "1.2.2",
+        "testem": "3.6.0"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20200326T173810Z.24ddb2718",
-        "flocking": "3.0.0-dev.20201125T044807Z.e93e401",
-        "codemirror-infusion": "2.4.0",
+        "infusion": "3.0.0",
+        "flocking": "3.0.1",
+        "codemirror-infusion": "2.4.1",
         "normalize.css": "8.0.1"
     },
     "scripts": {
-        "prepare": "node_modules/.bin/grunt",
+        "prepare": "fluid-lint-all",
         "test": "node_modules/.bin/testem ci --file tests/testem.json"
     }
 }
